@@ -7,7 +7,7 @@
 - Asset source used here: https://github.com/mrdoob/three.js/blob/r180/examples/models/gltf/ferrari.glb
 - Original asset license: Creative Commons Attribution (CC BY). License information: https://creativecommons.org/licenses/by/4.0/
 - Credit is retained here, in the downloadable archive and in the in-game driving guide.
-- Changes: mesh decompression and Meshopt re-encoding, simplified AI version, replacement paint/glass/light materials, steering and wheel animation, and integration into an original driving game. The simplified version discards original normals/UVs and recalculates normals. No original commercial racing-game assets are used.
+- Changes: mesh decompression and Meshopt re-encoding, simplified AI version and mobile player model, replacement paint/glass/light materials, steering and wheel animation, and integration into an original driving game. The simplified version discards original normals/UVs and recalculates normals. No original commercial racing-game assets are used.
 
 Ferrari and related marks belong to their respective owners. This independent demo is not endorsed by a vehicle manufacturer or any commercial racing-game publisher.
 

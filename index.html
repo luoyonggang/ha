@@ -1,22 +1,34 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 fill=%27%23101b23%27/%3E%3Ctext x=%275%27 y=%2725%27 font-size=%2726%27 fill=%27%23d0f096%27%3EA%3C/text%3E%3C/svg%3E"><meta name="theme-color" content="#10191e"><title>APEX II — 极境飞驰 · Pacific Grand Tour</title></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 fill=%27%23101b23%27/%3E%3Ctext x=%275%27 y=%2725%27 font-size=%2726%27 fill=%27%23d0f096%27%3EA%3C/text%3E%3C/svg%3E"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="manifest" href="./manifest.webmanifest"><meta name="theme-color" content="#10191e"><title>APEX II — 极境飞驰 · Pacific Grand Tour</title></head>
 <body>
 <div id="app">
   <canvas id="world" aria-label="3D 赛车游戏画面"></canvas>
   <div class="menu-shade"></div><div id="boost-overlay"></div><div id="collision-overlay"></div>
-  <header><a class="brand" href="#">A<span>PEX</span><i>PACIFIC GRAND TOUR / II</i></a><div class="location"><span class="live"></span> PACIFIC COAST HIGHWAY <small>海岸公路 · GOLDEN HOUR</small></div><div class="header-actions"><button id="fullscreen" class="icon-button" title="全屏">⛶ 全屏</button><button id="sound" class="icon-button" aria-pressed="false">引擎声音 OFF</button><button id="help-button" class="icon-button" title="操作说明">?</button></div></header>
+  <header><a class="brand" href="#">A<span>PEX</span><i>PACIFIC GRAND TOUR / II</i></a><div class="location"><span class="live"></span> PACIFIC COAST HIGHWAY <small>海岸公路 · GOLDEN HOUR</small></div><div class="header-actions"><button id="pause-mobile" class="icon-button phone-only drive-action" aria-label="暂停游戏">暂停</button><button id="fullscreen" class="icon-button" title="全屏">⛶ 全屏</button><button id="sound" class="icon-button" aria-pressed="false">引擎声音 OFF</button><button id="help-button" class="icon-button" title="操作说明">?</button></div></header>
   <main id="menu">
     <div class="eyebrow">THE NEXT CHAPTER <span>REAL-TIME 3D / V2.0</span></div>
     <h1>BUILT FOR<br><em>THE ESCAPE.</em></h1>
     <p class="intro">山海之间，尽情飞驰。<br>点燃 V8，体验沿海公路的每一个弯道。</p>
     <div class="track-info"><div><small>路线</small><b>太平洋海岸环线</b></div><div><small>里程</small><b id="distance">3.2 <span>KM</span></b></div><div><small>最高海拔</small><b>32 <span>M</span></b></div></div>
     <div class="mode-picker" role="group" aria-label="游戏模式"><button class="selected" data-mode="free">自由驾驶 <small>探索与练习</small></button><button data-mode="race">三圈竞速 <small>挑战 3 位车手</small></button></div>
+    <section id="mobile-settings" class="phone-only" aria-label="手机驾驶设置">
+      <div class="motion-buttons"><button id="motion-toggle" aria-pressed="false">开启重力转向</button><button id="motion-calibrate">校准中立</button></div>
+      <p id="motion-status" role="status">握稳手机后开启重力，向左右倾斜转向。也可用触屏方向按钮。</p>
+      <div class="mobile-options"><label><input id="auto-throttle" type="checkbox"> 自动油门</label><label>转向幅度 <input id="tilt-range" type="range" min="10" max="35" value="16" aria-label="达到全转向所需倾斜角度"><span id="tilt-range-label">16°</span></label></div>
+    </section>
     <button id="start" class="start" disabled>正在载入 <span>↗</span></button>
-    <div class="hint">WASD 驾驶 <span>·</span> SHIFT 氮气 <span>·</span> SPACE 漂移</div>
+    <div class="phone-only mobile-hint">推荐横屏 · 倾斜转向 · 多指同时按住油门和氮气</div>
+    <div class="hint desktop-hint">WASD 驾驶 <span>·</span> SHIFT 氮气 <span>·</span> SPACE 漂移</div>
   </main>
   <aside id="car-card"><div class="card-top">YOUR MACHINE <span>HIGH DETAIL</span></div><h2>458 <i>ITALIA</i></h2><p>4.5L NATURALLY ASPIRATED V8</p><div class="specs"><div><b>570<small>PS</small></b><span>车型参考功率</span></div><div><b>7<small>DCT</small></b><span>模拟自动变速</span></div><div><b>310<small>KM/H</small></b><span>游戏极速 / 氮气更快</span></div></div><div class="color-header"><span id="color-name">EMBER ORANGE</span><small>选择车漆</small></div><div class="swatches" role="group" aria-label="车漆颜色"><button data-color="#ed5e32" data-name="EMBER ORANGE" class="selected" style="--paint:#ed5e32" aria-label="橙色车漆" aria-pressed="true"></button><button data-color="#9cacb8" data-name="LIQUID SILVER" style="--paint:#9cacb8" aria-label="银色车漆" aria-pressed="false"></button><button data-color="#236696" data-name="ATLANTIC BLUE" style="--paint:#236696" aria-label="蓝色车漆" aria-pressed="false"></button><button data-color="#b4be6a" data-name="SAGE METALLIC" style="--paint:#b4be6a" aria-label="绿色车漆" aria-pressed="false"></button></div></aside>
   <div id="hud" class="hidden">
+    <div id="rotate-hint" class="phone-only">横屏驾驶体验更好 ↻</div>
+    <div id="mobile-controller" class="phone-only" aria-label="触屏驾驶控制">
+      <div class="mobile-tools"><button id="camera-mobile" aria-label="切换镜头">镜头</button><button id="reset-mobile" aria-label="重置驾驶">重置</button><button id="calibrate-mobile" aria-label="校准重力转向">校准</button></div>
+      <div class="steer-pad"><div><button data-drive="left" aria-label="左转" aria-pressed="false">◀</button><button data-drive="right" aria-label="右转" aria-pressed="false">▶</button></div><small id="tilt-live">触屏转向</small></div>
+      <div class="pedal-pad"><div class="aux-pedals"><button data-drive="handbrake" aria-label="手刹漂移" aria-pressed="false">漂移</button><button data-drive="boost" aria-label="氮气加速" aria-pressed="false">氮气</button></div><div class="main-pedals"><button data-drive="brake" aria-label="刹车或倒车" aria-pressed="false">刹车</button><button data-drive="throttle" aria-label="油门" aria-pressed="false">油门</button></div></div>
+    </div>
     <div class="race-info"><small id="mode-label">PACIFIC / 自由驾驶</small><div class="lap-line"><b id="lap">LAP 01</b><span id="position">FREE RUN</span></div><span id="timer">00:00.000</span><div class="best">BEST <b id="best-lap">—</b></div></div>
     <div id="notice">太平洋海岸 · 自由驾驶</div><div id="countdown" class="hidden"></div>
     <div class="speedometer"><div class="gear">GEAR <b id="gear">N</b><span id="camera-label">CHASE CAM</span></div><div class="speed-value"><b id="speed">0</b><span>KM/H</span></div><div class="rpm"><i id="rpm"></i></div><div class="tach-label"><span>1</span><span>3</span><span>5</span><span>7</span><span>9 ×1000 RPM</span></div><div class="nitro-label">NITRO <span>HOLD SHIFT</span></div><div class="nitro"><i id="nitro"></i></div><small>458 ITALIA <span>V8 / RWD</span></small></div>
@@ -24,7 +36,7 @@
     <div class="map-container"><canvas id="map" width="240" height="180"></canvas><small>PACIFIC GRAND TOUR</small></div>
   </div>
   <section id="result" class="modal hidden" aria-label="比赛结果"><div class="modal-card"><div class="eyebrow">FINISH LINE</div><h2>竞速完成</h2><p id="result-detail"></p><div class="result-stats"><div><small>总用时</small><b id="result-time"></b></div><div><small>最佳圈速</small><b id="result-best"></b></div></div><button id="restart" class="start">再次挑战 <span>↗</span></button><button id="return-menu" class="text-button">返回车库</button></div></section>
-  <section id="help" class="modal hidden" aria-label="操作说明"><div class="modal-card"><div class="eyebrow">DRIVER'S MANUAL</div><h2>驾驶指南</h2><dl><dt>W / ↑</dt><dd>加速</dd><dt>S / ↓</dt><dd>刹车，停稳后倒车</dd><dt>A D / ← →</dt><dd>转向；高速时提前减速入弯</dd><dt>空格</dt><dd>手刹漂移，松开后恢复抓地</dd><dt>Shift</dt><dd>氮气加速，松开后自动补充</dd><dt>C / Q</dt><dd>切换镜头 / 按住后视</dd><dt>R / Esc</dt><dd>重置本次驾驶 / 暂停</dd></dl><p>支持电脑键盘。建议使用独立显卡，卡顿时切换「流畅」画质。车辆可在护栏范围内行驶，碰撞会减速。</p><p class="asset-credit">赛车模型：vicent091036 · CC BY<br>环境光照：Greg Zaal / Poly Haven · CC0<br>渲染引擎：three.js · MIT</p><button id="close-help" class="start">了解，开始驾驶 <span>↗</span></button></div></section>
+  <section id="help" class="modal hidden" aria-label="操作说明"><div class="modal-card"><div class="eyebrow">DRIVER'S MANUAL</div><h2>驾驶指南</h2><dl><dt>W / ↑</dt><dd>加速</dd><dt>S / ↓</dt><dd>刹车，停稳后倒车</dd><dt>A D / ← →</dt><dd>转向；高速时提前减速入弯</dd><dt>空格</dt><dd>手刹漂移，松开后恢复抓地</dd><dt>Shift</dt><dd>氮气加速，松开后自动补充</dd><dt>C / Q</dt><dd>切换镜头 / 按住后视</dd><dt>R / Esc</dt><dd>重置本次驾驶 / 暂停</dd></dl><p>手机：点击「开启重力转向」并允许传感器权限，保持中立后开始驾驶；倾斜左右转向。可多指同时按油门、刹车、漂移和氮气。支持自动油门与触屏方向备用。重力操作需要 HTTPS，屏幕旋转后会重新校准。电脑仍支持键盘操作，卡顿时切换流畅画质。</p><p class="asset-credit">赛车模型：vicent091036 · CC BY<br>环境光照：Greg Zaal / Poly Haven · CC0<br>渲染引擎：three.js · MIT</p><button id="close-help" class="start">了解，开始驾驶 <span>↗</span></button></div></section>
   <footer><span><i></i> HIGH DETAIL / HDR LIGHTING</span><span>APEX II <b>/</b> PACIFIC GRAND TOUR</span><button id="quality">画质：高 ↗</button></footer>
   <div id="loading"><div class="loader-brand">APEX <em>II</em></div><p id="load-status">正在加载精细模型与环境光照…</p><div class="loading-bar"><i></i></div><small>首次载入需要几秒钟</small></div>
 </div><script type="module" src="/src/main.js"></script>

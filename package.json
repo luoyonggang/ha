@@ -1,6 +1,6 @@
 {
   "name": "apex-drive",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
@@ -8,7 +8,9 @@
     "preview": "vite preview --host 0.0.0.0",
     "test": "node --test tests/*.test.js",
     "test:browser": "playwright test",
-    "package:game": "npm run build && node scripts/package-game.mjs"
+    "package:game": "npm run build && node scripts/package-game.mjs",
+    "package:mobile": "vite build --mode mobile --outDir dist-mobile && node scripts/package-mobile.mjs",
+    "package:all": "npm run package:game && npm run package:mobile"
   },
   "dependencies": {
     "three": "^0.180.0",

@@ -6,5 +6,5 @@ export default defineConfig({
     launchOptions:{executablePath:process.env.APEX_CHROMIUM_PATH || (existsSync('/usr/bin/chromium')?'/usr/bin/chromium':undefined),
       args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader']},
   },
-  webServer:{command:'npm run dev -- --port 5173',url:'http://localhost:5173',reuseExistingServer:!process.env.CI},
+  webServer:[{command:'npm run dev -- --port 5173',url:'http://localhost:5173',reuseExistingServer:!process.env.CI},{command:'node scripts/serve-mobile.mjs',url:'http://localhost:8000',reuseExistingServer:!process.env.CI}],
 });

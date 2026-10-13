@@ -1,8 +1,34 @@
-# APEX II / 极境飞驰
+# APEX MOBILE / 极境飞驰 3
 
-电脑浏览器 3D 赛车游戏，第二版升级了车辆模型、地形和驾驶反馈。
+支持手机重力转向与电脑键盘的 3D 赛车游戏。手机版默认流畅画质，专用车辆模型约 12 万三角面，包含自动油门、多指触控和倾斜校准。
 
 ![车库与精细赛车](docs/images/garage.jpg)
+
+## 手机重力版
+
+**[下载手机版 ZIP（约 4.3 MB）](https://github.com/luoyonggang/ha/raw/refs/heads/main/downloads/APEX-Mobile.zip)**
+
+手机重力传感器要求安全网页环境，推荐 HTTPS 在线版。直接在文件管理器打开 HTML，部分手机只能使用触屏控制。
+
+本仓库的 `docs/` 已准备好手机网页。仓库主人首次开启 GitHub Pages：
+
+1. 打开 [仓库 Pages 设置](https://github.com/luoyonggang/ha/settings/pages)。
+2. **Source** 选择 **Deploy from a branch**。
+3. **Branch** 选择 **main**，文件夹选择 **/docs**，点击 **Save**。
+4. 等待 GitHub 部署成功后，再打开 `https://luoyonggang.github.io/ha/`。在部署完成前，此地址不能保证可用。
+
+![手机横屏布局（浏览器模拟）](docs/images/mobile-driving.jpg)
+
+推荐横屏，在系统浏览器打开：iPhone 使用 Safari，Android 使用 Chrome。
+
+- 点击「开启重力转向」，允许传感器权限，保持握持姿势等待中立校准。
+- 向左右倾斜手机转向；画面中的油门、刹车、漂移和氮气支持多指同时按住。
+- 可勾选「自动油门」，刹车时会停止自动加速。
+- 触屏左右转向按钮始终可用，重力权限被拒绝也能玩。
+- 更换握持姿势可点击「校准」；横竖屏变化后会自动重新校准。
+- 暂停、切换应用或失去触点时会释放控制，避免持续加速。
+
+在线完整加载后，可通过浏览器添加到主屏幕。手机版提供离线缓存，缓存成功后可离线打开；传感器可用性仍取决于设备、浏览器和权限。当前已验证模拟传感器、手机尺寸、多指触控和离线缓存，未在实体手机上验证手感和性能。
 
 ## 直接下载游玩
 
@@ -49,9 +75,11 @@ npm run dev
 开发服务器默认端口 5173。`npm run build` 生成生产资源；`npm run preview` 检查生产构建。
 
 ```sh
-npm test                 # 5 项驾驶物理测试
-npm run package:game     # 构建并生成单文件 HTML 与 ZIP
-npm run test:browser     # 浏览器驾驶、竞速结算和离线包测试
+npm test                 # 驾驶物理与重力输入测试
+npm run package:game     # 构建桌面通用版 HTML 与 ZIP
+npm run package:mobile   # 构建手机专用 HTML、ZIP 和 docs/ 网页
+npm run package:all      # 更新全部下载文件
+npm run test:browser     # 桌面、手机、竞速结算和离线缓存测试
 ```
 
 浏览器测试使用 Playwright。在没有 Chromium 的机器上先执行 `npx playwright install chromium`。可以通过 `APEX_CHROMIUM_PATH` 指定浏览器位置。云环境测试使用 `/usr/bin/chromium` 的软件渲染，不能据此推断用户电脑的帧率。

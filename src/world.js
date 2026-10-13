@@ -91,8 +91,8 @@ function rockTexture(){
     pixels.data[k]=f;pixels.data[k+1]=f*.96;pixels.data[k+2]=f*.89;pixels.data[k+3]=255;
   }ctx.putImageData(pixels,0,0);const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.colorSpace=THREE.SRGBColorSpace;return t;
 }
-function makeTerrain(scene){
-  const geometry=new THREE.PlaneGeometry(3000,2700,240,220);geometry.rotateX(-Math.PI/2);geometry.translate(500,0,-100);
+function makeTerrain(scene,mobile){
+  const geometry=new THREE.PlaneGeometry(3000,2700,mobile?140:240,mobile?130:220);geometry.rotateX(-Math.PI/2);geometry.translate(500,0,-100);
   const position=geometry.attributes.position,colors=[];const brown=new THREE.Color('#8e826a'),green=new THREE.Color('#637257');
   for(let i=0;i<position.count;i++){
     const x=position.getX(i),z=position.getZ(i),h=terrainHeight(x,z);position.setY(i,h);
@@ -108,20 +108,20 @@ function makeTerrain(scene){
   for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i).multiplyScalar(1+fbm(p.getX(i)*4,p.getZ(i)*4)*.23);p.setXYZ(i,v.x,v.y,v.z);}geo.computeVertexNormals();
   const rock=rockTexture(),rockMat=new THREE.MeshStandardMaterial({color:'#9c9488',map:rock,bumpMap:rock,bumpScale:.16,roughness:.95});
   const rocks=[];
-  for(let i=0;i<210;i++){
+  for(let i=0;i<(mobile?120:210);i++){
     const z=random()*2000-1050,x=coastX(z)+random()*70-40,y=terrainHeight(x,z),size=4+random()*19;
     if(closestTrack(x,z).distance<size*1.6+14)continue;
     rocks.push({p:[x,y+size*.1,z],r:[random(),random()*6,random()],s:[size,size*.8,size*1.3]});
   }
-  for(let i=0;i<80;i++){
+  for(let i=0;i<(mobile?45:80);i++){
     const s=trackSamples[Math.floor(random()*SAMPLE_COUNT)],x=s.p.x+s.n.x*(35+random()*130),z=s.p.z+s.n.z*(35+random()*130);
     if(x<coastX(z)+80)continue;const size=2+random()*7;rocks.push({p:[x,terrainHeight(x,z)+size*.2,z],r:[random(),random()*6,random()],s:[size,size*.6,size]});
   }
   instanced(scene,geo,rockMat,rocks,true);
 }
-function makeVegetation(scene){
+function makeVegetation(scene,mobile){
   const trunks=[],foliage=[],grasses=[];
-  for(let i=0;i<350;i++){
+  for(let i=0;i<(mobile?180:350);i++){
     const s=trackSamples[Math.floor(random()*SAMPLE_COUNT)],side=random()<.3?-1:1,offset=side*(19+random()*190);
     const x=s.p.x+s.n.x*offset,z=s.p.z+s.n.z*offset;
     if(x<coastX(z)+55)continue;
@@ -133,7 +133,7 @@ function makeVegetation(scene){
   instanced(scene,new THREE.CylinderGeometry(.55,1,1,7),mat('#655b49'),trunks,true);
   instanced(scene,new THREE.PlaneGeometry(1,1),new THREE.MeshStandardMaterial({map:pineTexture(),alphaTest:.3,side:THREE.DoubleSide,roughness:1}),foliage,false);
   // Low roadside tufts use the same needle texture; avoid per-blade draw calls.
-  for(let i=0;i<1700;i++){
+  for(let i=0;i<(mobile?700:1700);i++){
     const s=trackSamples[Math.floor(random()*SAMPLE_COUNT)],o=(random()<.5?-1:1)*(9.9+random()*12);
     const x=s.p.x+s.n.x*o,z=s.p.z+s.n.z*o;
     grasses.push({p:[x,terrainHeight(x,z)+.3,z],r:[0,random()*6,0],s:[.7+random()*.7,.45+random()*.6,1],color:random()<.5?'#b7ad78':'#839574'});
@@ -239,9 +239,9 @@ function makeBuildings(scene){
   const window=new THREE.MeshPhysicalMaterial({color:'#5d747b',roughness:.12,metalness:.4});
   for(let i=0;i<4;i++)mesh(scene,new THREE.BoxGeometry(2.6,1.8,.04),window,[20+i*3.3,5.5,49.03]);
 }
-export function buildWorld(scene){
+export function buildWorld(scene,{mobile=false}={}){
   scene.fog=new THREE.FogExp2('#acb9bf',.00062);
-  makeSky(scene);const ocean=makeOcean(scene);makeTerrain(scene);makeRoad(scene);makeVegetation(scene);makeBuildings(scene);
+  makeSky(scene);const ocean=makeOcean(scene);makeTerrain(scene,mobile);makeRoad(scene);makeVegetation(scene,mobile);makeBuildings(scene);
   const hemi=new THREE.HemisphereLight('#d3e5f4','#75614e',.8);scene.add(hemi);
   const sun=new THREE.DirectionalLight('#ffe3bd',3.2);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-65;sun.shadow.camera.right=65;sun.shadow.camera.top=65;sun.shadow.camera.bottom=-65;sun.shadow.camera.near=1;sun.shadow.camera.far=500;sun.shadow.bias=-.0002;sun.shadow.normalBias=.025;sun.shadow.radius=2;scene.add(sun,sun.target);
   return {ocean,sun,update(time,position){ocean.material.uniforms.time.value=time;sun.position.copy(position).add(new THREE.Vector3(-180,110,-130));sun.target.position.copy(position);}};

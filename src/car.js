@@ -2,12 +2,13 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import carURL from './assets/ferrari.glb?url';
+import mobileURL from './assets/ferrari-mobile.glb?url';
 import lodURL from './assets/ferrari-lod.glb?url';
 import aoURL from './assets/ferrari_ao.png?url';
 
-export async function loadCars(){
+export async function loadCars({mobile=false}={}){
   const loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
-  const [high,low]=await Promise.all([loader.loadAsync(carURL),loader.loadAsync(lodURL)]);
+  const [high,low]=await Promise.all([loader.loadAsync(import.meta.env.VITE_MOBILE_BUILD==='1'?mobileURL:mobile?mobileURL:carURL),loader.loadAsync(lodURL)]);
   const ao=await new THREE.TextureLoader().loadAsync(aoURL);
   return {high:high.scene,low:low.scene,ao};
 }
@@ -17,7 +18,12 @@ export function makeCar(scene,assets,color='#ed5e32',highDetail=true){
   model.traverse(o=>{
     if(!o.isMesh)return;
     o.material=o.material.clone();o.castShadow=highDetail;o.receiveShadow=true;
-    if(!o.geometry.attributes.normal)o.geometry.computeVertexNormals();
+    if(!o.geometry.attributes.normal){
+      // Thin model panels include opposite faces sharing positions after simplification.
+      // Keep their normals separate; averaging them produces zero normals and black sparkles.
+      if(o.geometry.index)o.geometry=o.geometry.toNonIndexed();
+      o.geometry.computeVertexNormals();
+    }
     if(/tire/i.test(o.name)){o.material.color.set('#161a1c');o.material.roughness=.95;o.material.metalness=0;}
     if(/carbon/i.test(o.name)){o.material.color.set('#1d252a');o.material.roughness=.42;}
   });
